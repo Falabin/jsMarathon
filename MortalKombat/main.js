@@ -70,6 +70,7 @@ function changeHP(obj) {
     if(obj.hp <= 0){
         $arenas.appendChild(playerWin(compareWin()));
     }
+    
 }
 
 //homework-3 Task#3
@@ -101,4 +102,5 @@ $randomButton.addEventListener('click', function() {
 
 $arenas.appendChild(createPlayer(liuKang));
 $arenas.appendChild(createPlayer(sonya));
+
 
