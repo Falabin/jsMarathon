@@ -1,10 +1,14 @@
 const $arenas = document.querySelector('.arenas');
 const $randomButton = document.querySelector('.button');
+const $control = document.querySelector('.control');
 // Task #0
-const liuKang = {
+const player1 = {
     player: 1,
     name: 'liuKang',
     hp: 100,
+    changeHP : changeHP,
+    renderHP: renderHP, 
+    elHP: elHP, 
     img: 'http://reactmarathon-api.herokuapp.com/assets/liukang.gif',
     weapon: ['nunchucks'],
     attack: function() {
@@ -12,10 +16,13 @@ const liuKang = {
     }
 };
 
-const sonya = {
-    player:2,
+const player2 = {
+    player: 2,
     name: 'Sonya',
     hp: 100,
+    changeHP : changeHP,
+    renderHP: renderHP, 
+    elHP: elHP, 
     img: 'http://reactmarathon-api.herokuapp.com/assets/sonya.gif',
     weapon: ['garrotte'],
     attack: function() {
@@ -31,7 +38,6 @@ function createElement(tag, className) {
 
     return $tag;
 }
-
 
 //Task #1
 function createPlayer(obj) {
@@ -54,51 +60,87 @@ function createPlayer(obj) {
     
 }
 
- 
-
-function changeHP(obj) {
-    const $playerLife = document.querySelector('.player' + obj.player + ' .life');
-    //homework-3 Task#2
-    obj.hp -= (Math.ceil(Math.random() * 20));
-    $playerLife.style.width = obj.hp + '%';
-   //homework-3 Task#1
-    if(obj.hp <= 0){
-        obj.hp = 0;
-        $randomButton.disabled = true;
+function changeHP(num) {
+    
+    if(this.hp > 0) {
+        this.hp -= num;
     }
-   
-    if(obj.hp <= 0){
-        $arenas.appendChild(playerWin(compareWin()));
+
+    if(this.hp <= 0){
+        this.hp = 0;
     }
 }
 
-//homework-3 Task#3
-function compareWin () {
-    if(sonya.hp === 0 && liuKang.hp !== 0) {
-        return liuKang.name;
-     } else if (liuKang.hp === 0 && sonya.hp !== 0) {
-         return sonya.name;
-     } else if (liuKang.hp === 0 && sonya.hp === 0) {
-        window.location.reload();
-     }
-     
+function getRandom(num) {
+    return Math.ceil(Math.random() * num);
 }
 
 function playerWin(name) {
     const $playerWin = createElement('div', 'loseTitle');
-    $playerWin.innerText = name + ' WIN';
+    if (name) {
+        $playerWin.innerText = name + ' WIN';
+    } else {
+        $playerWin.innerText = "DRAW";
+    }
 
     return $playerWin;
 }
 
+
 $randomButton.addEventListener('click', function() {
-    console.log("###: Click Random Button");
-    
-    changeHP(liuKang);
-    changeHP(sonya);
+    player1.changeHP(getRandom(20));
+    player2.changeHP(getRandom(20));
+    player1.renderHP();
+    player2.renderHP();
+
+    if(player1.hp === 0 || player2.hp === 0) {
+        $randomButton.disabled = true;
+        showButton();
+    }
+
+    if(player1.hp === 0 && player1.hp < player2.hp) {
+        $arenas.appendChild(playerWin(player2.name));
+    } else if(player2.hp === 0 && player2.hp < player1.hp) {
+        $arenas.appendChild(playerWin(player1.name));
+    } else if(player1.hp === 0 && player2.hp === 0) {
+        $arenas.appendChild(playerWin());
+    }
+
 });
 //Task #2 and Task #3 homework-2
 
-$arenas.appendChild(createPlayer(liuKang));
-$arenas.appendChild(createPlayer(sonya));
+$arenas.appendChild(createPlayer(player1));
+$arenas.appendChild(createPlayer(player2));
 
+//Homework-4 
+//Task #1
+function elHP() {
+    console.log(this);
+   return document.querySelector('.player' + this.player + ' .life');
+}
+
+function renderHP() {
+    this.elHP().style.width = this.hp + '%';
+}
+
+//Task #2 
+function showButton (){
+    $control.appendChild(createReloadButton());
+    const $button = document.querySelector('.reloadWrap', '.button');
+    
+    
+    $button.addEventListener('click', function(){
+        return window.location.reload();
+    });
+
+}
+
+function createReloadButton() {
+    const $reloadWrap = createElement('div', 'reloadWrap');
+    const $button = createElement('button', 'button');
+    
+    $button.innerText = "Restart";
+    $reloadWrap.appendChild($button);
+
+    return $reloadWrap;
+}
