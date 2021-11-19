@@ -69,6 +69,7 @@ function changeHP(num) {
     if(this.hp <= 0){
         this.hp = 0;
     }
+    
 }
 
 function getRandom(num) {
@@ -142,5 +143,8 @@ function createReloadButton() {
     $button.innerText = "Restart";
     $reloadWrap.appendChild($button);
 
+
     return $reloadWrap;
 }
+
+
