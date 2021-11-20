@@ -159,7 +159,7 @@ $formFight.addEventListener('submit', function(e) {
 
     if(player1.hp === 0 || player2.hp === 0) {
         $formFight.disabled = true;
-        createReloadButton();
+        showButton();
     }
 
     if(player1.hp === 0 && player1.hp < player2.hp) {
