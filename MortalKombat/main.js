@@ -1,14 +1,25 @@
 const $arenas = document.querySelector('.arenas');
-const $randomButton = document.querySelector('.button');
-const $control = document.querySelector('.control');
+// const $randomButton = document.querySelector('.button');
+// const $control = document.querySelector('.control');
+
+const $formFight = document.querySelector('.control');
+
+const HIT = {
+    head: 30,
+    body: 25,
+    foot: 20,
+};
+
+const ATTACK = ['head', 'body', 'foot'];
+
 // Task #0
 const player1 = {
     player: 1,
     name: 'liuKang',
     hp: 100,
-    changeHP : changeHP,
-    renderHP: renderHP, 
-    elHP: elHP, 
+    changeHP,
+    renderHP, 
+    elHP, 
     img: 'http://reactmarathon-api.herokuapp.com/assets/liukang.gif',
     weapon: ['nunchucks'],
     attack: function() {
@@ -20,9 +31,9 @@ const player2 = {
     player: 2,
     name: 'Sonya',
     hp: 100,
-    changeHP : changeHP,
-    renderHP: renderHP, 
-    elHP: elHP, 
+    changeHP,
+    renderHP, 
+    elHP, 
     img: 'http://reactmarathon-api.herokuapp.com/assets/sonya.gif',
     weapon: ['garrotte'],
     attack: function() {
@@ -88,15 +99,68 @@ function playerWin(name) {
 }
 
 
-$randomButton.addEventListener('click', function() {
-    player1.changeHP(getRandom(20));
-    player2.changeHP(getRandom(20));
-    player1.renderHP();
-    player2.renderHP();
+// $randomButton.addEventListener('click', function() {
+//     player1.changeHP(getRandom(20));
+//     player2.changeHP(getRandom(20));
+//     player1.renderHP();
+//     player2.renderHP();
+
+
+// });
+//Task #2 and Task #3 homework-2
+
+$arenas.appendChild(createPlayer(player1));
+$arenas.appendChild(createPlayer(player2));
+
+function enemyAttack() {
+    const hit = ATTACK[getRandom(3) - 1];
+    const defence = ATTACK[getRandom(3) - 1];
+
+    return {
+        value: getRandom(HIT[hit]),
+        hit,
+        defence,
+    };
+    
+}
+
+function playerAttack(){
+    const attack = {};
+
+    for (let item of $formFight) {
+        if(item.checked && item.name === 'hit') {
+            attack.value = getRandom(HIT[item.value]);
+            attack.hit = item.value;        
+        }
+        if (item.checked && item.name === 'defence') {
+            attack.defence = item.value;
+        }
+        item.checked = false;
+    }
+    return attack;
+    
+}
+
+$formFight.addEventListener('submit', function(e) {
+    e.preventDefault();
+    console.dir($formFight);
+    const enemy = enemyAttack();
+    
+    const attack = playerAttack();
+
+    if(enemy.hit !== attack.defence){
+        player1.changeHP(enemy.value);
+        player1.renderHP();
+    }
+
+    if(attack.hit !== enemy.defence) {
+        player2.changeHP(attack.value);
+        player2.renderHP();
+    }
 
     if(player1.hp === 0 || player2.hp === 0) {
-        $randomButton.disabled = true;
-        showButton();
+        $formFight.disabled = true;
+        createReloadButton();
     }
 
     if(player1.hp === 0 && player1.hp < player2.hp) {
@@ -108,10 +172,6 @@ $randomButton.addEventListener('click', function() {
     }
 
 });
-//Task #2 and Task #3 homework-2
-
-$arenas.appendChild(createPlayer(player1));
-$arenas.appendChild(createPlayer(player2));
 
 //Homework-4 
 //Task #1
@@ -146,5 +206,4 @@ function createReloadButton() {
 
     return $reloadWrap;
 }
-
 
