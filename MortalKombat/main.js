@@ -144,6 +144,7 @@ function changeHP(num) {
     if(this.hp <= 0){
         this.hp = 0;
     }
+    
 }
 
 function elHP() {
@@ -287,4 +288,39 @@ $formFight.addEventListener('submit', function(e) {
     }
 
 });
+
+
+//Homework-4 
+//Task #1
+function elHP() {
+    console.log(this);
+   return document.querySelector('.player' + this.player + ' .life');
+}
+
+function renderHP() {
+    this.elHP().style.width = this.hp + '%';
+}
+
+//Task #2 
+function showButton (){
+    $control.appendChild(createReloadButton());
+    const $button = document.querySelector('.reloadWrap', '.button');
+    
+    
+    $button.addEventListener('click', function(){
+        return window.location.reload();
+    });
+
+}
+
+function createReloadButton() {
+    const $reloadWrap = createElement('div', 'reloadWrap');
+    const $button = createElement('button', 'button');
+    
+    $button.innerText = "Restart";
+    $reloadWrap.appendChild($button);
+
+
+    return $reloadWrap;
+}
 
